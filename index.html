@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>URL Shortener</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <form action="/submit" method="post" id="urlForm">
+      <div>
+        <label for="url">Enter URL:</label>
+        <input type="url" id="url" class="field" name="url" required>
+      </div>
+      <button type="submit" class="btn">Get Short URL</button>
+    </form>
+
+    <div id="result" class="hidden">
+    <p>Short URL: <a href="#" id="shortUrl" target="_blank"></a></p>
+  </div>
+  </div>
+
+  
+
+  <script>
+    window.addEventListener("load", function () {
+      document.getElementById("result").classList.add("hidden");
+    });
+
+    document.getElementById("urlForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const urlInput = document.getElementById("url").value;
+
+    const response = await fetch("http://localhost:3000/submit", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ url: urlInput }),
+  });
+
+  const data = await response.json();
+
+  const shortUrl = document.getElementById("shortUrl");
+  shortUrl.href = data.shortUrl;
+  shortUrl.textContent = data.shortUrl;
+
+  document.getElementById("result").classList.remove("hidden");
+});
+  </script>
+</body>
+</html>
